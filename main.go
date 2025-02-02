@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -20,7 +21,9 @@ func main() {
 	}
 
 	articleShowHandler := func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, "Article No.1\n")
+		articleID := 1
+		res := fmt.Sprintf("Article No.%d\n", articleID)
+		io.WriteString(w, res)
 	}
 
 	postingNiceHandler := func(w http.ResponseWriter, req *http.Request) {
