@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -21,8 +22,13 @@ func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func ArticleShowHandler(w http.ResponseWriter, req *http.Request) {
-	articleID := chi.URLParam(req, "articleID")
-	res := fmt.Sprintf("Article No.%v\n", articleID)
+	articleID, err := strconv.Atoi(chi.URLParam(req, "articleID"))
+	if err != nil {
+		http.Error(w, "Invalid articleID", http.StatusBadRequest)
+		return
+	}
+
+	res := fmt.Sprintf("Article No.%d\n", articleID)
 	io.WriteString(w, res)
 }
 
