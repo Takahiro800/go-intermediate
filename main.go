@@ -5,16 +5,25 @@ import (
 	"net/http"
 
 	"github.com/Takahiro800/go-intermediate/handlers"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
-	http.HandleFunc("/hello", handlers.HelloHandler)
-	http.HandleFunc("/article", handlers.PostingArticleHandler)
-	http.HandleFunc("/article/list", handlers.ArticleListHandler)
-	http.HandleFunc("/article/1", handlers.ArticleShowHandler)
-	http.HandleFunc("/article/nice", handlers.PostingNiceHandler)
-	http.HandleFunc("/article/comment", handlers.PostingCommentHandler)
+	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
+	r.Get("/hello", handlers.HelloHandler)
+	r.Post("/article", handlers.PostingArticleHandler)
+	r.Get("/article/list", handlers.ArticleListHandler)
+	r.Get("/article/1", handlers.ArticleShowHandler)
+	r.Post("/article/nice", handlers.PostingNiceHandler)
+	r.Post("/article/comment", handlers.PostingCommentHandler)
 
 	log.Println("server started at :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
