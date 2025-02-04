@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func HelloHandler(w http.ResponseWriter, req *http.Request) {
@@ -19,8 +21,8 @@ func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func ArticleShowHandler(w http.ResponseWriter, req *http.Request) {
-	articleID := 1
-	res := fmt.Sprintf("Article No.%d\n", articleID)
+	articleID := chi.URLParam(req, "articleID")
+	res := fmt.Sprintf("Article No.%v\n", articleID)
 	io.WriteString(w, res)
 }
 

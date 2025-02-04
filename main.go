@@ -20,7 +20,7 @@ func main() {
 	r.Get("/hello", handlers.HelloHandler)
 	r.Post("/article", handlers.PostingArticleHandler)
 	r.Get("/article/list", handlers.ArticleListHandler)
-	r.Get("/article/1", handlers.ArticleShowHandler)
+	r.Get("/article/{articleID}", handlers.ArticleShowHandler)
 	r.Post("/article/nice", handlers.PostingNiceHandler)
 	r.Post("/article/comment", handlers.PostingCommentHandler)
 
