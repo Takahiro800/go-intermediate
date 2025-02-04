@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strconv"
 
+	"github.com/Takahiro800/go-intermediate/models"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -14,7 +16,14 @@ func HelloHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func PostingArticleHandler(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "Posting article...\n")
+	article := models.Article1
+	jsonData, err := json.Marshal(article)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(jsonData)
 }
 
 func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
