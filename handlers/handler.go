@@ -29,6 +29,21 @@ func PostingArticleHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	defer req.Body.Close()
+
+	var reqArticle models.Article
+	if err := json.Unmarshal(reqBodyBuffer, &reqArticle); err != nil {
+		http.Error(w, "fail to decode json", http.StatusBadRequest)
+		return
+	}
+
+	// article := models.Article1
+	// jsonData, err := json.Marshal(article)
+	// if err != nil {
+	// 	http.Error(w, "fail to encode json\n", http.StatusInternalServerError)
+	// 	return
+	// }
+	//
+	// w.Write(jsonData)
 }
 
 func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
