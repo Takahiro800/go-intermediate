@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -39,15 +39,10 @@ func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
 		page = 1
 	}
 
-	articles := []models.Article{models.Article1, models.Article2}
-	jsonData, err := json.Marshal(articles)
-	if err != nil {
-		errMsg := fmt.Sprintf("fail to encode json (page %d)\n", page)
-		http.Error(w, errMsg, http.StatusInternalServerError)
-		return
-	}
+	log.Println(page)
 
-	w.Write(jsonData)
+	articles := []models.Article{models.Article1, models.Article2}
+	json.NewEncoder(w).Encode(articles)
 }
 
 func ArticleShowHandler(w http.ResponseWriter, req *http.Request) {
@@ -57,34 +52,27 @@ func ArticleShowHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	article := models.Article1
-	jsonData, err := json.Marshal(article)
-	if err != nil {
-		errMsg := fmt.Sprintf("fail to encode json (articleID %d)\n", articleID)
-		http.Error(w, errMsg, http.StatusBadRequest)
-	}
+	log.Println(articleID)
 
-	w.Write(jsonData)
+	article := models.Article1
+	json.NewEncoder(w).Encode(article)
 }
 
 func PostingNiceHandler(w http.ResponseWriter, req *http.Request) {
-	article := models.Article1
-	jsonData, err := json.Marshal(article)
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+	var reqArticle models.Article
+	if err := json.NewDecoder(req.Body).Decode(&reqArticle); err != nil {
+		http.Error(w, "fail to decode json", http.StatusBadRequest)
 	}
-
-	w.Write(jsonData)
+	article := reqArticle
+	json.NewEncoder(w).Encode(article)
 }
 
 func PostingCommentHandler(w http.ResponseWriter, req *http.Request) {
-	comment := models.Comment1
-	jsonData, err := json.Marshal(comment)
-	if err != nil {
-		http.Error(w, "fail to encode json\n", http.StatusInternalServerError)
-		return
+	var reqComment models.Comment
+	if err := json.NewDecoder(req.Body).Decode(&reqComment); err != nil {
+		http.Error(w, "fail to decode json", http.StatusBadRequest)
 	}
 
-	w.Write(jsonData)
+	comment := reqComment
+	json.NewEncoder(w).Encode(comment)
 }
