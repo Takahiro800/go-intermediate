@@ -40,8 +40,15 @@ func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
 		page = 1
 	}
 
-	resString := fmt.Sprintf("Article List (page %d)", page)
-	io.WriteString(w, resString)
+	articles := []models.Article{models.Article1, models.Article2}
+	jsonData, err := json.Marshal(articles)
+	if err != nil {
+		errMsg := fmt.Sprintf("fail to encode json (page %d)\n", page)
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(jsonData)
 }
 
 func ArticleShowHandler(w http.ResponseWriter, req *http.Request) {
@@ -51,14 +58,34 @@ func ArticleShowHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	res := fmt.Sprintf("Article No.%d\n", articleID)
-	io.WriteString(w, res)
+	article := models.Article1
+	jsonData, err := json.Marshal(article)
+	if err != nil {
+		errMsg := fmt.Sprintf("fail to encode json (articleID %d)\n", articleID)
+		http.Error(w, errMsg, http.StatusBadRequest)
+	}
+
+	w.Write(jsonData)
 }
 
 func PostingNiceHandler(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "Posting Nice...\n")
+	article := models.Article1
+	jsonData, err := json.Marshal(article)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(jsonData)
 }
 
 func PostingCommentHandler(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "Posting Comment...\n")
+	comment := models.Comment1
+	jsonData, err := json.Marshal(comment)
+	if err != nil {
+		http.Error(w, "fail to encode json\n", http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(jsonData)
 }
